@@ -1,0 +1,19 @@
+URControl 30.17.33 [] G5 (19-10-2020, 05:02:41)
+2020-11-23_14:16:48:02225 00:00:00:000 INFO    - parseOpts(): The following ports will be used: Primary - 30001, Secondary - 30002, Matlab - 30003, RTDE - 30004, Primary_read_only - 30011, Secondary_read_only - 30012, Matlab_read_only - 30013.
+2020-11-23_14:16:48:02233 00:00:00:000 INFO    - Loading calibration from '/home/singularity/catkin_ws/src/lds/scripts/ursim-5.9.4.1031232/.urcontrol/calibration.conf'
+2020-11-23_14:16:48:02235 00:00:00:000 WARNING - loadCalibration: Error: Cannot open configuration file '/home/singularity/catkin_ws/src/lds/scripts/ursim-5.9.4.1031232/.urcontrol/calibration.conf'. The file is corrupt or missing.
+2020-11-23_14:16:48:02236 00:00:00:000 INFO    - ConfigurationManager::loadConfiguration: Loading urcontrol.conf from: /home/singularity/catkin_ws/src/lds/scripts/ursim-5.9.4.1031232/.urcontrol/urcontrol.conf.
+
+2020-11-23_14:16:48:02237 00:00:00:000 WARNING - readLastSeenJointPositions: Error: Cannot open configuration file '/home/singularity/catkin_ws/src/lds/scripts/ursim-5.9.4.1031232/.urcontrol/.last_seen_joint_positions.conf'. The file is corrupt or missing..
+
+2020-11-23_14:16:48:02239 00:00:00:000 INFO    - Safety Version 5:5
+2020-11-23_14:16:48:02240 00:00:00:000 WARNING - PThread::_start: SCHED_FIFO - Failed to set scheduling parameters for PThreadPool
+2020-11-23_14:16:48:08933 00:00:00:000 INFO    - Safety Version 5:5
+2020-11-23_14:16:48:08937 00:00:00:002 INFO    - Safety Version 5:5
+Exception was caught in creating ModbusServer: ServerSocket: Socket::bind() failed.
+You need root privileges to open a Modbus server at port 502
+Perhaps use: "sudo setcap cap_net_bind_service+ep ./URControl"
+2020-11-23_14:16:48:09744 00:00:00:004 INFO    - RTM: Target RobotMode changed from ROBOT_MODE_DISCONNECTED to ROBOT_MODE_POWER_OFF
+2020-11-23_14:16:48:09749 00:00:00:004 INFO    - New safety mode: SAFETY_MODE_NORMAL
+2020-11-23_14:16:48:09750 00:00:00:004 INFO    - Runtime state change: from PROGRAM_STATE_STOPPING to PROGRAM_STATE_STOPPED
+2020-11-23_14:16:48:09750 00:00:00:006 ERROR   - Socket::bind failed. Error_code = 13, Error_message = Permission denied

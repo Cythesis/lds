@@ -1,0 +1,3 @@
+<launch> 
+	<node pkg="lds" type="main" name="controller"/>
+</launch>

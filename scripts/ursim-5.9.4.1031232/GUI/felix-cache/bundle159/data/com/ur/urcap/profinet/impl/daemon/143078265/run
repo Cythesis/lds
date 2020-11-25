@@ -1,0 +1,4 @@
+#!/bin/sh
+exec 2>&1
+cd "/home/singularity/catkin_ws/src/lds/scripts/ursim-5.9.4.1031232/GUI/felix-cache/bundle159/data/com/ur/urcap/profinet/impl/daemon/"
+exec "/home/singularity/catkin_ws/src/lds/scripts/ursim-5.9.4.1031232/GUI/felix-cache/bundle159/data/com/ur/urcap/profinet/impl/daemon/PN"

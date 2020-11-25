@@ -1,0 +1,9 @@
+<launch> 
+	<node pkg="lds" type="move_pose_server" name="move_pose"/>
+	<node pkg="lds" type="move_joint_server" name="move_joint"/>
+	<node pkg="lds" type="move_beer_server" name="move_beer"/>
+	<node pkg="lds" type="move_cartesian_server" name="move_cartesian" output="screen"/>
+	<node pkg="lds" type="create_environment_server" name="create_environment"/>
+	<node pkg="lds" type="attach_object_server" name="attach_object"/>
+</launch>
+

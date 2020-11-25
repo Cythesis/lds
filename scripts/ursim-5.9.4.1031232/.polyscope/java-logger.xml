@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="20" status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%highlight{%d{HH:mm:ss.SSS} %-5level} - %msg %highlight{{thread: %t , loggerClass: %logger{36}}{FATAL=blue,ERROR=blue,WARN=blue,INFO=blue,DEBUG=blue,TRACE=blue}}%n"
+            />
+        </Console>
+        <RollingFile
+                name="RollingFile"
+                append="true"
+                fileName="${sys:user.home}/polyscope.log"
+                filePattern="${sys:user.home}/polyscope-%i.log"
+                bufferedIO="true"
+                immediateFlush="false"
+                ignoreExceptions="false">
+            <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} %-5level - %msg {thread: %t , loggerClass: %logger{36}}%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="2 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10" />
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="WARN">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>
