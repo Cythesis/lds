@@ -10,6 +10,7 @@ Packages:
 ```
 sudo apt install ros-melodic-moveit
 sudo apt install ros-melodic-smach
+git clone https://github.com/ros-drivers/usb_cam.git
 ```
 
 Non-packages (Optional)(Already included in package):
