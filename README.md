@@ -48,4 +48,3 @@ Service callback functions available in [controller.cpp](src/controller.cpp)
 - ...
 
 
-To create functional system and movement for the UR5 robot
