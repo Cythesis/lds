@@ -34,9 +34,18 @@ rosrun lds automas.py
 ```
 Press enter to proceed with the demo.
 
-## Topics and services
+## Extra Info
+Service:
+```
+/move_pose
+/move_cartesian
+```
+Service callback functions available in [Controller.cpp](src/Controller.cpp)
 
 ## Issues
+- Jump threshold not working as intended.
+- Pose not finding optimal path.
+- ...
 
 
 To create functional system and movement for the UR5 robot
