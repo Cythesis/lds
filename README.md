@@ -40,7 +40,7 @@ Service:
 /move_pose
 /move_cartesian
 ```
-Service callback functions available in [Controller.cpp](src/Controller.cpp)
+Service callback functions available in [controller.cpp](src/controller.cpp)
 
 ## Issues
 - Jump threshold not working as intended.
