@@ -24,7 +24,7 @@ sudo update-alternatives --config java
 rosrun lds install.sh
 ```
 
-Non-packages (Optional)(Already included in package):
+Non-packages:
 
 [URSimulator](https://www.universal-robots.com/download/?option=91610#section41511)
 
