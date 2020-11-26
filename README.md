@@ -13,19 +13,23 @@ sudo apt install ros-melodic-smach
 ```
 
 Non-packages (Optional)(Already included in package):
+
 [URSimulator](https://www.universal-robots.com/download/?option=91610#section41511)
 
 
 ## Installation
-`git clone https://github.com/Cythesis/lds.git`
+```
+git clone https://github.com/Cythesis/lds.git
+```
+[Setting up URSimulator](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver)
 
 ## Usage
 To run the basic demo:
-
-`rosrun lds start-ursim.sh
+```
+rosrun lds start-ursim.sh
 roslaunch lds all.launch
-rosrun lds automas.py`
-
+rosrun lds automas.py
+```
 Press enter to proceed with the demo.
 
 ## Topics and services
