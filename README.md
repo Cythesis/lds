@@ -18,10 +18,12 @@ Non-packages (Optional)(Already included in package):
 
 
 ## Installation
+Package:
 ```
 git clone https://github.com/Cythesis/lds.git
 ```
-[Setting up URSimulator](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver)
+URSimulator set up:
+[Link](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver)
 
 ## Usage
 To run the basic demo:
