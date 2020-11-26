@@ -8,8 +8,8 @@ This is the base package for testing with other packages such as:
 ## Requirements
 Packages:
 ```
+cd ~/catkin_ws/src
 sudo apt install ros-melodic-moveit
-sudo apt install ros-melodic-smach
 git clone https://github.com/ros-drivers/usb_cam.git
 ```
 
