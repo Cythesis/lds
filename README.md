@@ -11,6 +11,8 @@ Packages:
 cd ~/catkin_ws/src
 sudo apt install ros-melodic-moveit
 git clone https://github.com/ros-drivers/usb_cam.git
+cd ..
+catkin_make
 ```
 
 Non-packages (Optional)(Already included in package):
