@@ -7,9 +7,10 @@ This is the base package for testing with other packages such as:
 
 ## Requirements
 Packages:
-
-`sudo apt install ros-melodic-moveit`
-`sudo apt install ros-melodic-smach`
+```
+sudo apt install ros-melodic-moveit
+sudo apt install ros-melodic-smach
+```
 
 Non-packages (Optional)(Already included in package):
 [URSimulator](https://www.universal-robots.com/download/?option=91610#section41511)
@@ -20,9 +21,11 @@ Non-packages (Optional)(Already included in package):
 
 ## Usage
 To run the basic demo:
+
 `rosrun lds start-ursim.sh
 roslaunch lds all.launch
 rosrun lds automas.py`
+
 Press enter to proceed with the demo.
 
 ## Topics and services
