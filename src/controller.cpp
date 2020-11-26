@@ -482,7 +482,7 @@ bool Controller::moveCartesianCallback(lds::pose::Request &req, lds::pose::Respo
 		std::vector<geometry_msgs::Pose> waypoints;
 		waypoints.push_back(target_pose);
 		moveit_msgs::RobotTrajectory trajectory;
-		double fraction = move_group.computeCartesianPath(waypoints, 0.01, 100, trajectory);
+		double fraction = move_group.computeCartesianPath(waypoints, 0.01, 0, trajectory);
 		status = move_group.execute(trajectory);
 		cout << "--------------------" << endl;
 		cout << "|Execution complete|" << endl;

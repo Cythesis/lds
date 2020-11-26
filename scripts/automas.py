@@ -84,7 +84,8 @@ class move_to_ar(smach.State):
 		smach.State.__init__(self,outcomes=[1])
 
 	def execute(self, userdata):
-		moveCartesian(0,0.8,0.15,0.707,0,0,0.707)
+		# moveCartesian(0,0.8,0.15,0.707,0,0,0.707)
+		movePose(0,0.8,0.15,0.707,0,0,0.707,0,0,0,0)
 		return 1
 
 class move_closer(smach.State):
@@ -92,7 +93,8 @@ class move_closer(smach.State):
 		smach.State.__init__(self,outcomes=[1])
 
 	def execute(self, userdata):
-		moveCartesian(0,0.9,0.15,0.707,0,0,0.707)
+		# moveCartesian(0,0.9,0.15,0.707,0,0,0.707)
+		movePose(0,0.9,0.15,0.707,0,0,0.707,0,0,0,0)
 		return 1
 
 class close_gripper(smach.State):
@@ -108,7 +110,8 @@ class raise_cup(smach.State):
 		smach.State.__init__(self,outcomes=[1])
 
 	def execute(self, userdata):
-		moveCartesian(0,0.9,0.2,0.707,0,0,0.707)
+		# moveCartesian(0,0.9,0.2,0.707,0,0,0.707)
+		movePose(0,0.9,0.2,0.707,0,0,0.707,0,0,0,0)
 		return 1
 
 class move_to_tap(smach.State):
@@ -124,7 +127,8 @@ class lower_cup(smach.State):
 		smach.State.__init__(self,outcomes=[1])
 
 	def execute(self, userdata):
-		moveCartesian(0.5,0,0.15,1,0,0,0)
+		# moveCartesian(0.5,0,0.15,1,0,0,0)
+		movePose(0,0.9,0.2,0.707,0,0,0.707,0,0,0,0)
 		return 1
 
 class open_gripper(smach.State):
@@ -140,7 +144,8 @@ class back_away(smach.State):
 		smach.State.__init__(self,outcomes=[1])
 
 	def execute(self, userdata):
-		moveCartesian(0.4,0,0.15,1,0,0,0)
+		# moveCartesian(0.4,0,0.15,1,0,0,0)
+		movePose(0.4,0,0.15,1,0,0,0,0,0,0,0)
 		return 1
 
 class move_to_handle(smach.State):
@@ -148,7 +153,8 @@ class move_to_handle(smach.State):
 		smach.State.__init__(self,outcomes=[1])
 
 	def execute(self, userdata):
-		moveCartesian(0.4,0,0.6,1,0,0,0)
+		# moveCartesian(0.4,0,0.6,1,0,0,0)
+		movePose(0.4,0,0.6,1,0,0,0,0,0,0,0)
 		return 1
 
 class push_handle(smach.State):
@@ -156,7 +162,8 @@ class push_handle(smach.State):
 		smach.State.__init__(self,outcomes=[1])
 
 	def execute(self, userdata):
-		moveCartesian(0.6,0,0.6,1,0,0,0)
+		# moveCartesian(0.6,0,0.6,1,0,0,0)
+		movePose(0.6,0,0.6,1,0,0,0,0,0,0,0)
 		time.sleep(3)
 		return 1
 
@@ -165,7 +172,8 @@ class return_handle(smach.State):
 		smach.State.__init__(self,outcomes=[1])
 
 	def execute(self, userdata):
-		moveCartesian(0.45,0,0.6,1,0,0,0)
+		# moveCartesian(0.45,0,0.6,1,0,0,0)
+		movePose(0.45,0,0.6,1,0,0,0,0,0,0,0)
 		return 1
 
 class move_to_cup(smach.State):
@@ -173,7 +181,8 @@ class move_to_cup(smach.State):
 		smach.State.__init__(self,outcomes=[1])
 
 	def execute(self, userdata):
-		moveCartesian(0.4,0,0.15,1,0,0,0)
+		# moveCartesian(0.4,0,0.15,1,0,0,0)
+		movePose(0.4,0,0.15,1,0,0,0,0,0,0,0)
 		return 1
 
 class engage_cup(smach.State):
