@@ -1,6 +1,6 @@
 ## LDS - Learning and Developments
 This is the base package for testing with other packages such as:
-- Smach State Machine
+- [Smach State Machine](http://wiki.ros.org/smach)
 - URSim
 - Moveit
 - Usb_cam
