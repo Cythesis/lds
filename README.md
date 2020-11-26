@@ -16,6 +16,10 @@ git clone https://github.com/ros-drivers/usb_cam.git
 rosdep install -y --from-paths . --ignore-src --rosdistro melodic
 cd ..
 catkin_make
+
+sudo apt install openjdk-8-jre
+sudo update-alternatives --config java
+  select java-8
 ```
 
 Non-packages (Optional)(Already included in package):
