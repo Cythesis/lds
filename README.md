@@ -7,8 +7,9 @@ This is the base package for testing with other packages such as:
 
 ## Requirements
 Packages:
-`sudo apt install ros-melodic-moveit
-sudo apt install ros-melodic-smach`
+
+`sudo apt install ros-melodic-moveit`
+`sudo apt install ros-melodic-smach`
 
 Non-packages (Optional)(Already included in package):
 [URSimulator](https://www.universal-robots.com/download/?option=91610#section41511)
