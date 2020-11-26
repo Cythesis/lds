@@ -43,8 +43,8 @@ Service:
 Service callback functions available in [controller.cpp](src/controller.cpp)
 
 ## Issues
-- Jump threshold not working as intended.
-- Pose not finding optimal path.
-- ...
+![Issues](/images/Issues.png)
+Format: !Issues
+
 
 
