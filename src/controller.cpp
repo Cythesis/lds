@@ -85,25 +85,25 @@ void Controller::addObject() {
   collision_object2.header.frame_id = move_group.getPlanningFrame();
 
   // The id of the object is used to identify it.
-  // collision_object2.id = "box2";
+  collision_object2.id = "box2";
 
-  // // Define a box to add to the world.
-  // primitive.type = primitive.BOX;
-  // primitive.dimensions.resize(3);
-  // primitive.dimensions[0] = 2;
-  // primitive.dimensions[1] = 0.1;
-  // primitive.dimensions[2] = 1;
+  // Define a box to add to the world.
+  primitive.type = primitive.BOX;
+  primitive.dimensions.resize(3);
+  primitive.dimensions[0] = 0.1;
+  primitive.dimensions[1] = 1;
+  primitive.dimensions[2] = 2;
 
-  // // Define a pose for the box (specified relative to frame_id)
-  // box_pose.orientation.w = 1.0;
-  // box_pose.position.x = 0;
-  // box_pose.position.y = -0.5;
-  // box_pose.position.z = 0.5;
+  // Define a pose for the box (specified relative to frame_id)
+  box_pose.orientation.w = 1.0;
+  box_pose.position.x = 0;
+  box_pose.position.y = -1.2;
+  box_pose.position.z = 0.5;
 
-  // collision_object2.primitives.push_back(primitive);
-  // collision_object2.primitive_poses.push_back(box_pose);
-  // collision_object2.operation = collision_object2.ADD;
-  // collision_objects.push_back(collision_object2);
+  collision_object2.primitives.push_back(primitive);
+  collision_object2.primitive_poses.push_back(box_pose);
+  collision_object2.operation = collision_object2.ADD;
+  collision_objects.push_back(collision_object2);
 
 
   // Add another Object
@@ -166,19 +166,19 @@ void Controller::addObject2() {
 
   // Create object to represent tap
   collision_object2.header.frame_id = move_group.getPlanningFrame();
-  collision_object2.id = "tap";
+  collision_object2.id = "virtualBlock";
   primitive.type = primitive.BOX;
   primitive.dimensions.resize(3);
-  primitive.dimensions[0] = 0.12;
-  primitive.dimensions[1] = 0.12;
-  primitive.dimensions[2] = 0.5;
+  primitive.dimensions[0] = 0.1;
+  primitive.dimensions[1] = 2;
+  primitive.dimensions[2] = 1;
   box_pose.orientation.w = 1.0;
-  box_pose.position.x = 0.5;
-  box_pose.position.y = 0.1;
-  box_pose.position.z = 0.25;
-  collision_object1.primitives.push_back(primitive);
-  collision_object1.primitive_poses.push_back(box_pose);
-  collision_object1.operation = collision_object2.ADD;
+  box_pose.position.x = 0;
+  box_pose.position.y = -1.2;
+  box_pose.position.z = 0.5;
+  collision_object2.primitives.push_back(primitive);
+  collision_object2.primitive_poses.push_back(box_pose);
+  collision_object2.operation = collision_object2.ADD;
   collision_objects.push_back(collision_object2);
 
 
