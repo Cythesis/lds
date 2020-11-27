@@ -20,8 +20,6 @@ catkin_make
 sudo apt install openjdk-8-jre
 sudo update-alternatives --config java
   select java-8
-  
-rosrun lds install.sh
 ```
 
 Non-packages:
