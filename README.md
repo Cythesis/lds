@@ -23,7 +23,8 @@ sudo update-alternatives --config java
 ```
 
 Non-packages:
-
+Ubuntu 18.04
+ROS Melodic
 [URSimulator](https://www.universal-robots.com/download/?option=91610#section41511)
 
 
