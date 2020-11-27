@@ -1,4 +1,0 @@
-#!/bin/sh
-exec 2>&1
-cd "/home/singularity/catkin_ws/src/lds/scripts/ursim-5.9.4.1031232/GUI/felix-cache/bundle24/data/com/ur/urcap/ethernetip/impl/daemon/"
-exec "/home/singularity/catkin_ws/src/lds/scripts/ursim-5.9.4.1031232/GUI/felix-cache/bundle24/data/com/ur/urcap/ethernetip/impl/daemon/EIP"
