@@ -23,8 +23,9 @@ sudo update-alternatives --config java
 ```
 
 Non-packages:
-
-[URSimulator](https://www.universal-robots.com/download/?option=91610#section41511)
+- Ubuntu 18.04
+- ROS Melodic
+- [URSimulator](https://www.universal-robots.com/download/?option=91610#section41511)
 
 
 ## Installation
