@@ -174,7 +174,7 @@ void Controller::addObject2() {
   primitive.dimensions[2] = 1;
   box_pose.orientation.w = 1.0;
   box_pose.position.x = 0;
-  box_pose.position.y = -1.2;
+  box_pose.position.y = -1.5;
   box_pose.position.z = 0.5;
   collision_object2.primitives.push_back(primitive);
   collision_object2.primitive_poses.push_back(box_pose);
@@ -330,15 +330,22 @@ bool Controller::movePoseCallback(lds::move_pose::Request &req, lds::move_pose::
 
 	ocm.weight = 1.0;
 	constraint.orientation_constraints.push_back(ocm);
+	bool success;
 
-
-	move_group.setPathConstraints(constraint);	
-	move_group.setPoseTarget(pose);
-	move_group.setMaxVelocityScalingFactor(req.velocity_scaling);
-	moveit::planning_interface::MoveItErrorCode status = move_group.move(); 
+	while(!success) {
+		move_group.setPathConstraints(constraint);	
+		move_group.setPoseTarget(pose);
+		move_group.setMaxVelocityScalingFactor(req.velocity_scaling);
+		moveit::planning_interface::MoveGroupInterface::Plan my_plan;
+		success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+		if (success) {
+			moveit::planning_interface::MoveItErrorCode status = move_group.move(); 
+		}
+	}
 	move_group.clearPathConstraints(); 
 	move_group.setMaxVelocityScalingFactor(1.0);
-
+	cout << "------------------------------------" << endl;
+	cout << "Execution: " << success << endl;
 	res.rt = 1;
 	ROS_INFO("Service working correctly");
 	return 1;

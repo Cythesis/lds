@@ -36,7 +36,7 @@ public:
 		target_pose.position.y = 0;
 		target_pose.position.z = 0;
 		// move_group.setPlannerId("PRMkConfigDefault");
-		move_group.setPlanningTime(3);
+		// move_group.setPlanningTime(1);
 	};
 
 	bool arMarkerFound = 0;
