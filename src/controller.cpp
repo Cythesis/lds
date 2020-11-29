@@ -331,6 +331,8 @@ bool Controller::movePoseCallback(lds::move_pose::Request &req, lds::move_pose::
 	ocm.weight = 1.0;
 	constraint.orientation_constraints.push_back(ocm);
 	bool success;
+	int c_attemps = 0;
+	int attempts = 5;
 
 	while(!success) {
 		move_group.setPathConstraints(constraint);	
@@ -341,11 +343,15 @@ bool Controller::movePoseCallback(lds::move_pose::Request &req, lds::move_pose::
 		if (success) {
 			moveit::planning_interface::MoveItErrorCode status = move_group.move(); 
 		}
+		c_attemps += 1;
+		if (c_attemps > attempts) {
+			break;
+		}
 	}
 	move_group.clearPathConstraints(); 
 	move_group.setMaxVelocityScalingFactor(1.0);
 	cout << "------------------------------------" << endl;
-	cout << "Execution: " << success << endl;
+	cout << "Result: " << success << endl;
 	res.rt = 1;
 	ROS_INFO("Service working correctly");
 	return 1;

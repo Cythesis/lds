@@ -94,8 +94,8 @@ class move_closer(smach.State):
 		smach.State.__init__(self,outcomes=[1])
 
 	def execute(self, userdata):
-		moveCartesian(0,0.9,0.15,0.707,0,0,0.707)
-		# movePose(0,0.9,0.15,0.707,0,0,0.707,0,0,0,0)
+		# moveCartesian(0,0.9,0.15,0.707,0,0,0.707)
+		movePose(0,0.9,0.15,0.707,0,0,0.707,0,0.1,0.1,3.14)
 		raw_input("Press enter to activate motion . . .")
 		return 1
 
@@ -112,8 +112,8 @@ class raise_cup(smach.State):
 		smach.State.__init__(self,outcomes=[1])
 
 	def execute(self, userdata):
-		moveCartesian(0,0.9,0.2,0.707,0,0,0.707)
-		# movePose(0,0.9,0.2,0.707,0,0,0.707,0,0,0,0)
+		# moveCartesian(0,0.9,0.2,0.707,0,0,0.707)
+		movePose(0,0.9,0.2,0.707,0,0,0.707,0,0.1,0.1,3.14)
 		raw_input("Press enter to activate motion . . .")
 		return 1
 
@@ -123,7 +123,7 @@ class move_to_tap(smach.State):
 
 	def execute(self, userdata):
 		# moveCartesian(0.5,0,0.2,1,0,0,0)
-		movePose(0.5,0,0.2,1,0,0,0,0,0.1,0.1,3.14)
+		movePose(0.5,0,0.2,1,0,0,0,0.7,0.2,0.2,3.14)
 		raw_input("Press enter to activate motion . . .")
 		return 1
 
