@@ -144,6 +144,7 @@ void Controller::addObject2() {
   moveit_msgs::CollisionObject collision_object1;
   moveit_msgs::CollisionObject collision_object2;
   moveit_msgs::CollisionObject collision_object3;
+  moveit_msgs::CollisionObject collision_object4;
 
   // Create object to represent ground  
   collision_object1.header.frame_id = move_group.getPlanningFrame();
@@ -198,6 +199,23 @@ void Controller::addObject2() {
   collision_object3.primitive_poses.push_back(box_pose);
   collision_object3.operation = collision_object3.ADD;
   collision_objects.push_back(collision_object3);
+
+  // Overhead object
+  collision_object4.header.frame_id = move_group.getPlanningFrame();
+  collision_object4.id = "overhead_object";
+  primitive.type = primitive.BOX;
+  primitive.dimensions.resize(3);
+  primitive.dimensions[0] = 3;
+  primitive.dimensions[1] = 3;
+  primitive.dimensions[2] = 0.1;
+  box_pose.orientation.w = 1.0;
+  box_pose.position.x = 0;
+  box_pose.position.y = 0;
+  box_pose.position.z = 1;
+  collision_object4.primitives.push_back(primitive);
+  collision_object4.primitive_poses.push_back(box_pose);
+  collision_object4.operation = collision_object4.ADD;
+  collision_objects.push_back(collision_object4);
 
 
   // Add created object to world
@@ -265,94 +283,6 @@ bool Controller::moveJointCallback(lds::move_joint::Request &req, lds::move_join
 	}
 	res.rt = 1;
 	animate(q);
-	ROS_INFO("Service working correctly");
-	return 1;
-}
-
-bool Controller::movePoseCallback(lds::move_pose::Request &req, lds::move_pose::Response &res) {
-	geometry_msgs::Pose pose;
-	pose.position.x = req.x;
-	pose.position.y = req.y;
-	pose.position.z = req.z;
-	pose.orientation.w = req.qw;
-	pose.orientation.x = req.qx;
-	pose.orientation.y = req.qy;
-	pose.orientation.z = req.qz;
-
-	if (req.planning_method == "SBL") {
-		move_group.setPlannerId("SBLkConfigDefault");
-	} else if (req.planning_method == "EST"){
-		move_group.setPlannerId("ESTkConfigDefault");
-	} else if (req.planning_method == "LBKPIECE"){
-		move_group.setPlannerId("LBKPIECEkConfigDefault");
-	} else if (req.planning_method == "BKPIECE"){
-		move_group.setPlannerId("BKPIECEkConfigDefault");
-	} else if (req.planning_method == "KPIECE"){
-		move_group.setPlannerId("KPIECEkConfigDefault");
-	} else if (req.planning_method == "RRT"){
-		move_group.setPlannerId("RRTkConfigDefault");
-	} else if (req.planning_method == "RRTConnect"){
-		move_group.setPlannerId("RRTConnectkConfigDefault");
-	} else if (req.planning_method == "RRTstar"){
-		move_group.setPlannerId("RRTstarkConfigDefault");
-	} else if (req.planning_method == "TRRT"){
-		move_group.setPlannerId("TRRTkConfigDefault");
-	} else if (req.planning_method == "PRM"){
-		move_group.setPlannerId("PRMkConfigDefault");
-	} else if (req.planning_method == "PRMstar"){
-		move_group.setPlannerId("PRMstarkConfigDefault");
-	} else {
-		move_group.setPlannerId("RRTConnectkConfigDefault");
-	}
-
-	moveit_msgs::OrientationConstraint ocm;
-  	moveit_msgs::Constraints constraint;
-
-  	ocm.link_name = "ee_link";
-	ocm.header.frame_id = "base_link";
-	ocm.orientation = pose.orientation;
-	ocm.absolute_x_axis_tolerance = req.x_tolerance;
-	ocm.absolute_y_axis_tolerance = req.y_tolerance;
-	ocm.absolute_z_axis_tolerance = req.z_tolerance;
-	double min_tolerance = 0.00001;
-
-	if (req.x_tolerance < min_tolerance) {
-		ocm.absolute_x_axis_tolerance = 3.14;
-	}
-
-	if (req.y_tolerance < min_tolerance) {
-		ocm.absolute_y_axis_tolerance = 3.14;
-	} 
-
-	if (req.z_tolerance < min_tolerance) {
-		ocm.absolute_z_axis_tolerance = 3.14;
-	}
-
-	ocm.weight = 1.0;
-	constraint.orientation_constraints.push_back(ocm);
-	bool success;
-	int c_attemps = 0;
-	int attempts = 5;
-
-	while(!success) {
-		move_group.setPathConstraints(constraint);	
-		move_group.setPoseTarget(pose);
-		move_group.setMaxVelocityScalingFactor(req.velocity_scaling);
-		moveit::planning_interface::MoveGroupInterface::Plan my_plan;
-		success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-		if (success) {
-			moveit::planning_interface::MoveItErrorCode status = move_group.move(); 
-		}
-		c_attemps += 1;
-		if (c_attemps > attempts) {
-			break;
-		}
-	}
-	move_group.clearPathConstraints(); 
-	move_group.setMaxVelocityScalingFactor(1.0);
-	cout << "------------------------------------" << endl;
-	cout << "Result: " << success << endl;
-	res.rt = 1;
 	ROS_INFO("Service working correctly");
 	return 1;
 }
@@ -495,7 +425,7 @@ bool Controller::moveCartesianCallback(lds::pose::Request &req, lds::pose::Respo
 		std::vector<geometry_msgs::Pose> waypoints;
 		waypoints.push_back(target_pose);
 		moveit_msgs::RobotTrajectory trajectory;
-		double fraction = move_group.computeCartesianPath(waypoints, 0.01, 0, trajectory);
+		double fraction = move_group.computeCartesianPath(waypoints, 0.01, 2.0, trajectory);
 		status = move_group.execute(trajectory);
 		cout << "--------------------" << endl;
 		cout << "|Execution complete|" << endl;
@@ -527,3 +457,120 @@ bool Controller::createEnvironmentCallback(lds::request::Request &req, lds::requ
 	}
 	return 1;
 }
+
+  //////////////////
+ // Pose type 1 //
+////////////////
+
+bool Controller::movePoseCallback(lds::move_pose::Request &req, lds::move_pose::Response &res) {
+	geometry_msgs::Pose pose;
+	pose.position.x = req.x;
+	pose.position.y = req.y;
+	pose.position.z = req.z;
+	pose.orientation.w = req.qw;
+	pose.orientation.x = req.qx;
+	pose.orientation.y = req.qy;
+	pose.orientation.z = req.qz;
+
+	if (req.planning_method == "SBL") {
+		move_group.setPlannerId("SBLkConfigDefault");
+	} else if (req.planning_method == "EST"){
+		move_group.setPlannerId("ESTkConfigDefault");
+	} else if (req.planning_method == "LBKPIECE"){
+		move_group.setPlannerId("LBKPIECEkConfigDefault");
+	} else if (req.planning_method == "BKPIECE"){
+		move_group.setPlannerId("BKPIECEkConfigDefault");
+	} else if (req.planning_method == "KPIECE"){
+		move_group.setPlannerId("KPIECEkConfigDefault");
+	} else if (req.planning_method == "RRT"){
+		move_group.setPlannerId("RRTkConfigDefault");
+	} else if (req.planning_method == "RRTConnect"){
+		move_group.setPlannerId("RRTConnectkConfigDefault");
+	} else if (req.planning_method == "RRTstar"){
+		move_group.setPlannerId("RRTstarkConfigDefault");
+	} else if (req.planning_method == "TRRT"){
+		move_group.setPlannerId("TRRTkConfigDefault");
+	} else if (req.planning_method == "PRM"){
+		move_group.setPlannerId("PRMkConfigDefault");
+	} else if (req.planning_method == "PRMstar"){
+		move_group.setPlannerId("PRMstarkConfigDefault");
+	} else {
+		move_group.setPlannerId("RRTConnectkConfigDefault");
+	}
+
+	moveit_msgs::OrientationConstraint ocm;
+  	moveit_msgs::Constraints constraint;
+
+  	ocm.link_name = "ee_link";
+	ocm.header.frame_id = "base_link";
+	ocm.orientation = pose.orientation;
+	ocm.absolute_x_axis_tolerance = req.x_tolerance;
+	ocm.absolute_y_axis_tolerance = req.y_tolerance;
+	ocm.absolute_z_axis_tolerance = req.z_tolerance;
+	double min_tolerance = 0.00001;
+
+	if (req.x_tolerance < min_tolerance) {
+		ocm.absolute_x_axis_tolerance = 3.14;
+	}
+
+	if (req.y_tolerance < min_tolerance) {
+		ocm.absolute_y_axis_tolerance = 3.14;
+	} 
+
+	if (req.z_tolerance < min_tolerance) {
+		ocm.absolute_z_axis_tolerance = 3.14;
+	}
+
+	ocm.weight = 1.0;
+	constraint.orientation_constraints.push_back(ocm);
+	int success;
+	int c_attemps = 0;
+	int attempts = 5;
+	moveit::planning_interface::MoveItErrorCode status;
+
+	while(success != 1) {
+		move_group.setPathConstraints(constraint);	
+		move_group.setPoseTarget(pose);
+		move_group.setMaxVelocityScalingFactor(req.velocity_scaling);
+		moveit::planning_interface::MoveGroupInterface::Plan my_plan;
+		success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+		if (success) {
+			 status = move_group.move(); 
+		}
+
+		if (status.val != 1) {
+			cout << "Plan succeeded but execution failed" << endl;
+			success = 910;
+		}
+		c_attemps += 1;
+
+		if (c_attemps > attempts) {
+			break;
+		}
+	}
+	move_group.clearPathConstraints(); 
+	move_group.setMaxVelocityScalingFactor(1.0);
+	cout << "------------------------------------" << endl;
+	cout << "Plan status: " << success << endl;
+	cout << "Execution status: " << status.val << endl;
+	res.rt = 1;
+	ROS_INFO("Service working correctly");
+	return 1;
+}
+
+  /////////////////////////
+ // Motion Planning API // 
+/////////////////////////
+
+// bool Controller::movePoseCallback(lds::move_pose::Request &req, lds::move_pose::Response &res) {
+// 	geometry_msgs::Pose pose;
+// 	pose.position.x = req.x;
+// 	pose.position.y = req.y;
+// 	pose.position.z = req.z;
+// 	pose.orientation.w = req.qw;
+// 	pose.orientation.x = req.qx;
+// 	pose.orientation.y = req.qy;
+// 	pose.orientation.z = req.qz;
+
+// 	return 1
+

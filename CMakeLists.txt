@@ -44,7 +44,6 @@ add_service_files(
   FILES
   move_joint.srv
   move_pose.srv
-  move_beer.srv
   pose.srv
   request.srv
 )
@@ -89,10 +88,6 @@ add_dependencies(move_joint_server lds_gencpp)
 add_executable(move_pose_server src/move_pose_server.cpp)
 target_link_libraries(move_pose_server ${catkin_LIBRARIES})
 add_dependencies(move_pose_server lds_gencpp)
-
-add_executable(move_beer_server src/move_beer_server.cpp)
-target_link_libraries(move_beer_server ${catkin_LIBRARIES})
-add_dependencies(move_beer_server lds_gencpp)
 
 add_executable(move_cartesian_server src/moveCartesianServer.cpp)
 target_link_libraries(move_cartesian_server ${catkin_LIBRARIES})
