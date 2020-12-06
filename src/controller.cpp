@@ -427,11 +427,15 @@ bool Controller::moveCartesianCallback(lds::pose::Request &req, lds::pose::Respo
 		moveit_msgs::RobotTrajectory trajectory;
 		double fraction = move_group.computeCartesianPath(waypoints, 0.01, 2.0, trajectory);
 		status = move_group.execute(trajectory);
+		if (fraction < 0.99) {
+			status = 0;
+		}
 		cout << "--------------------" << endl;
 		cout << "|Execution complete|" << endl;
 		cout << "--------------------" << endl;
 		cout << "Exited with status: " << status.val << endl;
 		cout << "Exited with attempts: " << c_attemps << endl;
+		cout << "Exited with fraction: " << c_attemps << endl;
 		c_attemps += 1;
 		if (c_attemps >= attempts) {
 			res.rt = 0;
