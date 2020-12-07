@@ -78,11 +78,22 @@ class MoveGroupPythonIntefaceTutorial(object):
     current_joints = move_group.get_current_joint_values()
     return all_close(joint_goal, current_joints, 0.01)
 
+  def check_plan(self,points,threshold):
+    delta_joint = [0.0,0.0,0.0,0.0,0.0,0.0]
+    if (len(points) != 0):
+        for k in range(len(points)-1):
+            for i in range(6):
+                delta_joint[i] += abs(points[k+1].positions[i] - points[k].positions[i])
+                if (delta_joint[i] > threshold):
+                    return 0, delta_joint
+    if (len(points) == 0):
+        return 0, delta_joint
+    return 1, delta_joint
 
   def go_to_pose_goal(self,x,y,z,qw,qx,qy,qz):
     move_group = self.move_group
-    joint_coefficient = 1.5
-    points = []
+    threshold = 1.5
+    plan_flag = 0
     attempts = 0
     move_group.set_planning_time(0.1)
     pose_goal = geometry_msgs.msg.Pose()
@@ -95,25 +106,15 @@ class MoveGroupPythonIntefaceTutorial(object):
     pose_goal.position.z = z
     move_group.set_pose_target(pose_goal)
 
-    while (len(points) == 0):
-        start_joint = []
-        end_joint = []
-        delta_joint = []
-        attempts += 1
+    while (plan_flag == 0):
         plan = move_group.plan()
         points = plan.joint_trajectory.points
-        if (len(points) != 0):
-            for i in range(5):
-                start_joint.append(points[0].positions[i])
-                end_joint.append(points[len(points)-1].positions[i])
-                delta_joint.append(start_joint[i]-end_joint[i])
-                if (delta_joint[i] > joint_coefficient):
-                    points = []
-                    joint_coefficient += 0.05
-                    break
-    
+        (plan_flag, delta_joint) = self.check_plan(points,threshold)
+        threshold += 0.05
+        attempts += 1    
 
     print("Planning phase finished with:")
+    print("Type: Pose")
     print("Attempts: " + str(attempts))
     print("Max joint change: " + str(max(delta_joint)))
     print("^>^>^>^>^>^>^>^>^>^>^>^>")
@@ -132,9 +133,11 @@ class MoveGroupPythonIntefaceTutorial(object):
     waypoints = []
     fraction = 0.0
     attempts = 0
-    max_attempts = 20
+    max_attempts = 50
+    threshold = 1.5
 
     while (fraction < 0.98):
+        plan_flag = 0
         waypoints = []
         wpose = move_group.get_current_pose().pose
         wpose.position.x = x
@@ -145,16 +148,25 @@ class MoveGroupPythonIntefaceTutorial(object):
         wpose.orientation.y = qy
         wpose.orientation.z = qz
         waypoints.append(copy.deepcopy(wpose))
-
-        (plan, fraction) = move_group.compute_cartesian_path(
+        while (plan_flag == 0):
+            (plan, fraction) = move_group.compute_cartesian_path(
                                            waypoints,   
                                            0.01,        
-                                           2.0)         
-        attempts += 1
+                                           2.0)   
+            points = plan.joint_trajectory.points
+            (plan_flag, delta_joint) = self.check_plan(points,threshold)
+            threshold += 0.05
+            attempts += 1  
+        
         if (attempts > max_attempts):
             sys.exit()
-        if (fraction >= 0.98):
-            move_group.execute(plan,wait=True)
+
+    print("Planning phase finished with:")
+    print("Type: Cartesian")
+    print("Attempts: " + str(attempts))
+    print("Max joint change: " + str(max(delta_joint)))
+    print("^>^>^>^>^>^>^>^>^>^>^>^>")
+    move_group.execute(plan,wait=True)
 
     return plan, fraction
 
