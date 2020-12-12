@@ -53,8 +53,5 @@ Service:
 ```
 Service callback functions available in [controller.cpp](src/controller.cpp)
 
-## Issues
-![Issues](/images/Issues.png)
-
 
 
