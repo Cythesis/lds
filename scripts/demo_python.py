@@ -73,7 +73,6 @@ class MoveGroupPythonInteface(object):
     self.planning_frame = planning_frame
     self.eef_link = eef_link
     self.group_names = group_names
-    pdb.set_trace()
 
 
   def go_to_joint_state(self,j0,j1,j2,j3,j4,j5):
@@ -331,7 +330,7 @@ def demo1(): # Standard movements
     ur10.detach_box()
     ur10.go_to_pose_goal(0,0.5,0.25,0.707,0,0,0.707)
 
-def demo2(): # 
+def demo2(): # Random movement 
     ur10 = MoveGroupPythonInteface()
     ur10.create_environment()
     while not rospy.is_shutdown():
