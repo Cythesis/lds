@@ -1,4 +1,5 @@
 <launch> 
+	<include file="$(find ur_demo)/launch/cam_and_tracking.launch"/>
 	<arg name="robot_ip" value="127.0.0.1"/>
 	<arg name="debug" default="false" />
 	<arg name="limited" default="false" />
@@ -11,8 +12,7 @@
 
 	</include>
 
-	<!-- Camera and AR -->
-	<include file="$(find usb_cam)/launch/usb_cam-test.launch"/> 
+	<!-- Moveit Config -->
 	<include file="$(find ur10_e_moveit_config)/launch/move_group.launch">
 		<arg name="limited" default="$(arg limited)"/>
 		<arg name="debug" default="$(arg debug)" />

@@ -1,15 +1,26 @@
 #!/usr/bin/env python
 
+# UR libraries
 import sys
 import pdb
 import copy
 import rospy
+import random
 import moveit_commander
 import moveit_msgs.msg
 import geometry_msgs.msg
 from math import pi
 from std_msgs.msg import String
 from moveit_commander.conversions import pose_to_list
+
+# Email libraries
+import time
+from itertools import chain
+import email
+import imaplib
+import pdb
+
+
 
 
 # Determine whether actual and goal state is within tolerance
@@ -29,10 +40,10 @@ def all_close(goal, actual, tolerance):
   return True
 
 
-class MoveGroupPythonIntefaceTutorial(object):
+class MoveGroupPythonInteface(object):
   """MoveGroupPythonIntefaceTutorial"""
   def __init__(self):
-    super(MoveGroupPythonIntefaceTutorial, self).__init__()
+    super(MoveGroupPythonInteface, self).__init__()
     moveit_commander.roscpp_initialize(sys.argv)
     rospy.init_node('move_group_python_interface_tutorial', anonymous=True)
     robot = moveit_commander.RobotCommander()
@@ -62,6 +73,7 @@ class MoveGroupPythonIntefaceTutorial(object):
     self.planning_frame = planning_frame
     self.eef_link = eef_link
     self.group_names = group_names
+    pdb.set_trace()
 
 
   def go_to_joint_state(self,j0,j1,j2,j3,j4,j5):
@@ -115,6 +127,7 @@ class MoveGroupPythonIntefaceTutorial(object):
 
     print("Planning phase finished with:")
     print("Type: Pose")
+    print("Target: " + str(x) + ", " + str(y) + ", " + str(z))
     print("Attempts: " + str(attempts))
     print("Max joint change: " + str(max(delta_joint)))
     print("^>^>^>^>^>^>^>^>^>^>^>^>")
@@ -133,7 +146,7 @@ class MoveGroupPythonIntefaceTutorial(object):
     waypoints = []
     fraction = 0.0
     attempts = 0
-    max_attempts = 50
+    max_attempts = 10
     threshold = 1.5
 
     while (fraction < 0.98):
@@ -157,9 +170,9 @@ class MoveGroupPythonIntefaceTutorial(object):
             (plan_flag, delta_joint) = self.check_plan(points,threshold)
             threshold += 0.05
             attempts += 1  
+            if (attempts > 100):
+                sys.exit()
         
-        if (attempts > max_attempts):
-            sys.exit()
 
     print("Planning phase finished with:")
     print("Type: Cartesian")
@@ -214,7 +227,19 @@ class MoveGroupPythonIntefaceTutorial(object):
     box_pose.pose.position.y = 0.0
     box_pose.pose.position.z = -0.005
     box_name = "ground"
-    scene.add_box(box_name, box_pose, size=(2, 2, 0.01))
+    scene.add_box(box_name, box_pose, size=(4, 4, 0.01))
+
+    box_pose = geometry_msgs.msg.PoseStamped()
+    box_pose.header.frame_id = "base_link"
+    box_pose.pose.orientation.w = 1.0
+    box_pose.pose.orientation.x = 0
+    box_pose.pose.orientation.y = 0
+    box_pose.pose.orientation.z = 0
+    box_pose.pose.position.x = 0.0
+    box_pose.pose.position.y = 0.5
+    box_pose.pose.position.z = 0.5
+    box_name = "obstacle"
+    # scene.add_box(box_name, box_pose, size=(0.3, 0.3, 0.3))
 
     self.ground_name = box_name
     return self.wait_for_state_update(box_is_known=True, timeout=timeout)
@@ -263,23 +288,28 @@ class MoveGroupPythonIntefaceTutorial(object):
     scene.remove_world_object(box_name)
     return self.wait_for_state_update(box_is_attached=False, box_is_known=False, timeout=timeout)
 
+def search_string(uid_max, criteria):
+    c = list(map(lambda t: (t[0], '"'+str(t[1])+'"'), criteria.items())) + [('UID', '%d:*' % (uid_max+1))]
+    return '(%s)' % ' '.join(chain(*c))
+    # Produce search string in IMAP format:
+    #   e.g. (FROM "me@gmail.com" SUBJECT "abcde" BODY "123456789" UID 9999:*)
 
-def main():
-  try:
-    print ""
-    print "----------------------------------------------------------"
-    print "Welcome to the MoveIt MoveGroup Python Interface Tutorial"
-    print "----------------------------------------------------------"
-    print "Press Ctrl-D to exit at any time"
-    print ""
-    print "============ Press `Enter` to begin the tutorial by setting up the moveit_commander ..."
-    ur10 = MoveGroupPythonIntefaceTutorial()
+
+def get_first_text_block(msg):
+    type = msg.get_content_maintype()
+
+    if type == 'multipart':
+        for part in msg.get_payload():
+            if part.get_content_maintype() == 'text':
+                return part.get_payload()
+    elif type == 'text':
+        return msg.get_payload()
+
+def demo1(): # Standard movements
+    ur10 = MoveGroupPythonInteface()
     ur10.create_environment()
     ur10.detach_box()
     ur10.add_box()
-    
-
-    print "============ Press `Enter` to execute a movement using a joint state goal ..."
     ur10.go_to_pose_goal(0,0.5,0.25,0.707,0,0,0.707)
     ur10.go_to_pose_goal(0,0.8,0.15,0.707,0,0,0.707)
     ur10.go_to_pose_goal(0,0.9,0.15,0.707,0,0,0.707)
@@ -297,54 +327,77 @@ def main():
     ur10.attach_box()
     ur10.go_to_cartesian_path(0.5,0,0.2,1,0,0,0)
     ur10.go_to_cartesian_path(0,0.9,0.2,0.707,0,0,0.707)
-    ur10.go_to_pose_goal(0,0.9,0.16,0.707,0,0,0.707)
+    ur10.go_to_pose_goal(0,0.9,0.151,0.707,0,0,0.707)
     ur10.detach_box()
     ur10.go_to_pose_goal(0,0.5,0.25,0.707,0,0,0.707)
 
+def demo2(): # 
+    ur10 = MoveGroupPythonInteface()
+    ur10.create_environment()
+    while not rospy.is_shutdown():
+        ranx = random.randint(-79,79)/100.0
+        ranz = random.randint(10,79)/100.0
+        print("<"+str(ranx)+","+str(ranz)+">")
+
+        ur10.go_to_cartesian_path(ranx,0.5,ranz,0.707,0,0,0.707)
+        rospy.sleep(0.3)
+
+def demo3():
+    ur10 = MoveGroupPythonInteface()
+    ur10.create_environment()
+    imap_ssl_host = 'imap.gmail.com'  # imap.mail.yahoo.com
+    imap_ssl_port = 993
+    username = 'command.service.ros@gmail.com'
+    password = 'ubuntu20'
+
+    criteria = {
+        'FROM':    'command.service.ros@gmail.com'
+        # 'SUBJECT': 'Your First Message',
+        # 'BODY':    'Sincerely',
+    }
+    uid_max = 0
+    server = imaplib.IMAP4_SSL(imap_ssl_host, imap_ssl_port)
+    server.login(username, password)
+    server.select('INBOX')
+
+    result, data = server.uid('search', None, search_string(uid_max, criteria))
+
+    uids = [int(s) for s in data[0].split()]
+    if uids:
+        uid_max = max(uids)
+        # Initialize `uid_max`. Any UID less than or equal to `uid_max` will be ignored subsequently.
+
+    server.logout()
 
 
+    # Keep checking messages ...
+    # I don't like using IDLE because Yahoo does not support it.
+    while 1:
+        # Have to login/logout each time because that's the only way to get fresh results.
 
+        server = imaplib.IMAP4_SSL(imap_ssl_host, imap_ssl_port)
+        server.login(username, password)
+        server.select('Inbox')
 
+        result, data = server.uid('search', None, search_string(uid_max, criteria))
 
+        uids = [int(s) for s in data[0].split()]
+        for uid in uids:
+            # Have to check again because Gmail sometimes does not obey UID criterion.
+            if uid > uid_max:
+                result, data = server.uid('fetch', uid, '(RFC822)')  # fetch entire message
+                msg = email.message_from_string(data[0][1])
+                uid_max = uid
+            
+                text = get_first_text_block(msg)
+                print ':::::::::::: New message ::::::::::::'
+                ur10.go_to_pose_goal(0,0.5,float(msg['subject']),0.707,0,0,0.707)
+        server.logout()
+        time.sleep(1)
 
-    # print "============ Press `Enter` to execute a movement using a pose goal ..."
-    # raw_input()
-    # tutorial.go_to_pose_goal()
-
-    # print "============ Press `Enter` to plan and display a Cartesian path ..."
-    # raw_input()
-    # cartesian_plan, fraction = tutorial.plan_cartesian_path()
-
-    # print "============ Press `Enter` to display a saved trajectory (this will replay the Cartesian path)  ..."
-    # raw_input()
-    # tutorial.display_trajectory(cartesian_plan)
-
-    # print "============ Press `Enter` to execute a saved path ..."
-    # raw_input()
-    # tutorial.execute_plan(cartesian_plan)
-
-    # print "============ Press `Enter` to add a box to the planning scene ..."
-    # raw_input()
-    # tutorial.add_box()
-
-    # print "============ Press `Enter` to attach a Box to the Panda robot ..."
-    # raw_input()
-    # tutorial.attach_box()
-
-    # print "============ Press `Enter` to plan and execute a path with an attached collision object ..."
-    # raw_input()
-    # cartesian_plan, fraction = tutorial.plan_cartesian_path(scale=-1)
-    # tutorial.execute_plan(cartesian_plan)
-
-    # print "============ Press `Enter` to detach the box from the Panda robot ..."
-    # raw_input()
-    # tutorial.detach_box()
-
-    # print "============ Press `Enter` to remove the box from the planning scene ..."
-    # raw_input()
-    # tutorial.remove_box()
-
-    # print "============ Python tutorial demo complete!"
+def main():
+  try:
+    demo2()
   except rospy.ROSInterruptException:
     return
   except KeyboardInterrupt:
@@ -352,39 +405,3 @@ def main():
 
 if __name__ == '__main__':
   main()
-
-## BEGIN_TUTORIAL
-## .. _moveit_commander:
-##    http://docs.ros.org/melodic/api/moveit_commander/html/namespacemoveit__commander.html
-##
-## .. _MoveGroupCommander:
-##    http://docs.ros.org/melodic/api/moveit_commander/html/classmoveit__commander_1_1move__group_1_1MoveGroupCommander.html
-##
-## .. _RobotCommander:
-##    http://docs.ros.org/melodic/api/moveit_commander/html/classmoveit__commander_1_1robot_1_1RobotCommander.html
-##
-## .. _PlanningSceneInterface:
-##    http://docs.ros.org/melodic/api/moveit_commander/html/classmoveit__commander_1_1planning__scene__interface_1_1PlanningSceneInterface.html
-##
-## .. _DisplayTrajectory:
-##    http://docs.ros.org/melodic/api/moveit_msgs/html/msg/DisplayTrajectory.html
-##
-## .. _RobotTrajectory:
-##    http://docs.ros.org/melodic/api/moveit_msgs/html/msg/RobotTrajectory.html
-##
-## .. _rospy:
-##    http://docs.ros.org/melodic/api/rospy/html/
-## CALL_SUB_TUTORIAL imports
-## CALL_SUB_TUTORIAL setup
-## CALL_SUB_TUTORIAL basic_info
-## CALL_SUB_TUTORIAL plan_to_joint_state
-## CALL_SUB_TUTORIAL plan_to_pose
-## CALL_SUB_TUTORIAL plan_cartesian_path
-## CALL_SUB_TUTORIAL display_trajectory
-## CALL_SUB_TUTORIAL execute_plan
-## CALL_SUB_TUTORIAL add_box
-## CALL_SUB_TUTORIAL wait_for_scene_update
-## CALL_SUB_TUTORIAL attach_object
-## CALL_SUB_TUTORIAL detach_object
-## CALL_SUB_TUTORIAL remove_object
-## END_TUTORIAL

@@ -104,4 +104,8 @@ add_dependencies(create_environment_server lds_gencpp)
 
 include_directories(include ${THIS_PACKAGE_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIRS})
 
+catkin_install_python(PROGRAMS scripts/move_server.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
 

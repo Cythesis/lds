@@ -5,5 +5,6 @@
 	<node pkg="lds" type="move_cartesian_server" name="move_cartesian" output="screen"/>
 	<node pkg="lds" type="create_environment_server" name="create_environment"/>
 	<node pkg="lds" type="attach_object_server" name="attach_object"/>
+	<node pkg="lds" type="move_server.py" name="move_server" output="screen"/>
 </launch>
 
