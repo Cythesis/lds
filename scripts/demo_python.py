@@ -338,10 +338,22 @@ def demo2(): # Random movement
         ranz = random.randint(10,79)/100.0
         print("<"+str(ranx)+","+str(ranz)+">")
 
+        ur10.go_to_pose_goal(ranx,0.5,ranz,0.707,0,0,0.707)
+        rospy.sleep(0.3)
+
+def demo3(): # Random movement 
+    ur10 = MoveGroupPythonInteface()
+    ur10.create_environment()
+    while not rospy.is_shutdown():
+        ranx = random.randint(-79,79)/100.0
+        ranz = random.randint(10,79)/100.0
+        print("<"+str(ranx)+","+str(ranz)+">")
+
         ur10.go_to_cartesian_path(ranx,0.5,ranz,0.707,0,0,0.707)
         rospy.sleep(0.3)
 
-def demo3():
+def demo0():
+    demo = 0
     ur10 = MoveGroupPythonInteface()
     ur10.create_environment()
     imap_ssl_host = 'imap.gmail.com'  # imap.mail.yahoo.com
@@ -368,7 +380,6 @@ def demo3():
 
     server.logout()
 
-
     # Keep checking messages ...
     # I don't like using IDLE because Yahoo does not support it.
     while 1:
@@ -390,13 +401,22 @@ def demo3():
             
                 text = get_first_text_block(msg)
                 print ':::::::::::: New message ::::::::::::'
-                ur10.go_to_pose_goal(0,0.5,float(msg['subject']),0.707,0,0,0.707)
+                demo = int(msg['subject'])
         server.logout()
-        time.sleep(1)
+        if (demo == 1):
+            demo1()
+            demo = 0
+        elif (demo == 2):
+            demo2()
+            demo = 0
+        elif (demo == 3):
+            demo3()
+            demo = 0
+        rospy.sleep(1)
 
 def main():
   try:
-    demo2()
+    demo1()
   except rospy.ROSInterruptException:
     return
   except KeyboardInterrupt:
