@@ -243,6 +243,48 @@ class MoveGroupPythonInteface(object):
     self.ground_name = box_name
     return self.wait_for_state_update(box_is_known=True, timeout=timeout)
 
+  def create_environment2(self, timeout=4):
+    scene = self.scene
+
+    box_pose = geometry_msgs.msg.PoseStamped()
+    box_pose.header.frame_id = "base_link"
+    box_pose.pose.orientation.w = 1.0
+    box_pose.pose.orientation.x = 0
+    box_pose.pose.orientation.y = 0
+    box_pose.pose.orientation.z = 0
+    box_pose.pose.position.x = 0.0
+    box_pose.pose.position.y = 0.0
+    box_pose.pose.position.z = -0.005
+    box_name = "ground"
+    scene.add_box(box_name, box_pose, size=(4, 4, 0.01))
+
+    box_pose = geometry_msgs.msg.PoseStamped()
+    box_pose.header.frame_id = "base_link"
+    box_pose.pose.orientation.w = 1.0
+    box_pose.pose.orientation.x = 0
+    box_pose.pose.orientation.y = 0
+    box_pose.pose.orientation.z = 0
+    box_pose.pose.position.x = 0.0
+    box_pose.pose.position.y = 0.5
+    box_pose.pose.position.z = 0.5
+    box_name = "obstacle"
+    scene.add_box(box_name, box_pose, size=(0.3, 0.3, 0.3))
+
+    box_pose = geometry_msgs.msg.PoseStamped()
+    box_pose.header.frame_id = "base_link"
+    box_pose.pose.orientation.w = 1.0
+    box_pose.pose.orientation.x = 0
+    box_pose.pose.orientation.y = 0
+    box_pose.pose.orientation.z = 0
+    box_pose.pose.position.x = 0.0
+    box_pose.pose.position.y = 0.5
+    box_pose.pose.position.z = 1.2
+    box_name = "obstacle2"
+    scene.add_box(box_name, box_pose, size=(0.3, 0.3, 0.5))
+
+    self.ground_name = box_name
+    return self.wait_for_state_update(box_is_known=True, timeout=timeout)
+
   def add_box(self, timeout=4):
     box_name = self.box_name
     scene = self.scene
@@ -278,7 +320,16 @@ class MoveGroupPythonInteface(object):
 
     scene.remove_attached_object(eef_link, name=box_name)
     return self.wait_for_state_update(box_is_known=True, box_is_attached=False, timeout=timeout)
+  
+  def remove_all(self, timeout=4):
+    box_name = self.box_name
+    scene = self.scene
+    eef_link = self.eef_link
 
+    scene.remove_attached_object(eef_link, name='obstacle')
+    scene.remove_attached_object(eef_link, name='obstacle2')
+    return self.wait_for_state_update(box_is_known=True, box_is_attached=False, timeout=timeout)
+  
 
   def remove_box(self, timeout=4):
     box_name = self.box_name
@@ -332,6 +383,7 @@ def demo1(): # Standard movements
 
 def demo2(): # Random movement 
     ur10 = MoveGroupPythonInteface()
+    ur10.remove_all()
     ur10.create_environment()
     while not rospy.is_shutdown():
         ranx = random.randint(-79,79)/100.0
@@ -351,6 +403,13 @@ def demo3(): # Random movement
 
         ur10.go_to_cartesian_path(ranx,0.5,ranz,0.707,0,0,0.707)
         rospy.sleep(0.3)
+
+
+def demo4(): # Random movement 
+    ur10 = MoveGroupPythonInteface()
+    ur10.create_environment2()
+    ur10.go_to_pose_goal(0.48,0.5,0.55,0.707,0,0,0.707)
+    ur10.go_to_pose_goal(-0.36,0.5,0.6,0.707,0,0,0.707)
 
 def demo0():
     demo = 0
@@ -416,7 +475,15 @@ def demo0():
 
 def main():
   try:
-    demo1()
+    demo = int(raw_input("Which demo to perform: "))
+    if (demo == 1):
+        demo1() # Beer path
+    elif (demo == 2):
+        demo2() # Random pose
+    elif (demo == 3):
+        demo3() # Random cartesian
+    elif (demo == 4):
+        demo4() # Random pose with obstacles
   except rospy.ROSInterruptException:
     return
   except KeyboardInterrupt:
