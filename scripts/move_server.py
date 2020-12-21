@@ -21,7 +21,8 @@ class MoveGroupPythonInteface(object):
     moveit_commander.roscpp_initialize(sys.argv)
     rospy.init_node('move_server')
     rospy.Service('move_robot', pose, self.service)
-    move_group = moveit_commander.MoveGroupCommander("manipulator")
+    group_name = rospy.get_param("/planning/group_name")
+    move_group = moveit_commander.MoveGroupCommander(group_name)
     display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
                                                    moveit_msgs.msg.DisplayTrajectory,
                                                    queue_size=20)
@@ -138,10 +139,10 @@ class MoveGroupPythonInteface(object):
           self.move_group.set_path_constraints(constraint)
 
       if (req.planning_time == 0):
-        req.planning_time = 0.1
+        req.planning_time = rospy.get_param("/planning/planning_time")
 
       if (req.joint_threshold == 0):
-        req.joint_threshold = 1.5
+        req.joint_threshold = rospy.get_param("/planning/threshold")
 
       if (req.velocity_scaling == 0):
         self.move_group.set_max_velocity_scaling_factor(1)

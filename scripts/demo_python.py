@@ -104,7 +104,9 @@ class MoveGroupPythonInteface(object):
   def go_to_pose_goal(self,x,y,z,qw,qx,qy,qz):
     move_group = self.move_group
     threshold = 1.5
+    increase = 0.1
     plan_flag = 0
+    t_attempts = 0
     attempts = 0
     move_group.set_planning_time(0.1)
     pose_goal = geometry_msgs.msg.Pose()
@@ -121,8 +123,15 @@ class MoveGroupPythonInteface(object):
         plan = move_group.plan()
         points = plan.joint_trajectory.points
         (plan_flag, delta_joint) = self.check_plan(points,threshold)
-        threshold += 0.05
+        increase += 0.1
+        threshold += increase
+        if (threshold > 3.14):
+            move_group.set_planning_time(3)
+            t_attempts += 1
         attempts += 1    
+        if (t_attempts > 1):
+            print("Planning failed")
+            return False
 
     print("Planning phase finished with:")
     print("Type: Pose")
@@ -358,6 +367,7 @@ def get_first_text_block(msg):
 def demo1(): # Standard movements
     ur10 = MoveGroupPythonInteface()
     ur10.create_environment()
+    pdb.set_trace()
     ur10.detach_box()
     ur10.add_box()
     ur10.go_to_pose_goal(0,0.5,0.25,0.707,0,0,0.707)

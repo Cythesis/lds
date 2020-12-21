@@ -1,4 +1,10 @@
 <launch> 
+	<arg name="group_name"/>
+	<arg name="threshold"/>
+	<arg name="planning_time"/>
+	<param name="planning/group_name" value="$(arg group_name)"/>
+	<param name="planning/threshold" value="$(arg threshold)"/>
+	<param name="planning/planning_time" value="$(arg planning_time)"/>
 	<node pkg="lds" type="move_pose_server" name="move_pose" output="screen"/>
 	<node pkg="lds" type="move_joint_server" name="move_joint"/>
 	<node pkg="lds" type="move_beer_server" name="move_beer"/>
