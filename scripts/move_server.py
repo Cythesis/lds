@@ -139,10 +139,10 @@ class MoveGroupPythonInteface(object):
           self.move_group.set_path_constraints(constraint)
 
       if (req.planning_time == 0):
-        req.planning_time = rospy.get_param("/planning/planning_time")
+        req.planning_time = float(rospy.get_param("/planning/planning_time"))
 
       if (req.joint_threshold == 0):
-        req.joint_threshold = rospy.get_param("/planning/threshold")
+        req.joint_threshold = float(rospy.get_param("/planning/threshold"))
 
       if (req.velocity_scaling == 0):
         self.move_group.set_max_velocity_scaling_factor(1)

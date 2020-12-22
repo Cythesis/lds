@@ -12,6 +12,7 @@ import geometry_msgs.msg
 from math import pi
 from std_msgs.msg import String
 from moveit_commander.conversions import pose_to_list
+from lds.srv import pose,poseResponse
 
 # Email libraries
 import time
@@ -21,6 +22,17 @@ import imaplib
 import pdb
 
 
+def move(x, y, z, qw, qx, qy, qz, moveType='', vel_scaling = 0.0, acc_scaling = 0.0, x_tol = 0.0, y_tol = 0.0, z_tol = 0.0, planning_time = 0.0, threshold = 0.0):
+    rospy.wait_for_service('move_robot')
+    try:
+        motion = rospy.ServiceProxy('move_robot', pose)
+        resp1 = motion(moveType,x,y,z,qw,qx,qy,qz,vel_scaling,acc_scaling,x_tol,y_tol,z_tol,planning_time,threshold)
+        if (resp1.rt != 1):
+            raw_input("ERROR . . .")
+        return resp1.rt
+    except:
+        print("service call failed")
+        raw_input("ERROR . . .")
 
 
 # Determine whether actual and goal state is within tolerance
@@ -123,15 +135,8 @@ class MoveGroupPythonInteface(object):
         plan = move_group.plan()
         points = plan.joint_trajectory.points
         (plan_flag, delta_joint) = self.check_plan(points,threshold)
-        increase += 0.1
-        threshold += increase
-        if (threshold > 3.14):
-            move_group.set_planning_time(3)
-            t_attempts += 1
-        attempts += 1    
-        if (t_attempts > 1):
-            print("Planning failed")
-            return False
+        threshold += 0.1
+        attempts += 1
 
     print("Planning phase finished with:")
     print("Type: Pose")
@@ -190,6 +195,8 @@ class MoveGroupPythonInteface(object):
     move_group.execute(plan,wait=True)
 
     return plan, fraction
+
+
 
 
   def display_trajectory(self, plan):
@@ -364,10 +371,12 @@ def get_first_text_block(msg):
     elif type == 'text':
         return msg.get_payload()
 
+
+
 def demo1(): # Standard movements
     ur10 = MoveGroupPythonInteface()
     ur10.create_environment()
-    pdb.set_trace()
+    # pdb.set_trace()
     ur10.detach_box()
     ur10.add_box()
     ur10.go_to_pose_goal(0,0.5,0.25,0.707,0,0,0.707)
@@ -448,9 +457,6 @@ def demo0():
         # Initialize `uid_max`. Any UID less than or equal to `uid_max` will be ignored subsequently.
 
     server.logout()
-
-    # Keep checking messages ...
-    # I don't like using IDLE because Yahoo does not support it.
     while 1:
         # Have to login/logout each time because that's the only way to get fresh results.
 

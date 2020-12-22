@@ -1,0 +1,10 @@
+<launch> 
+	<include file="$(find fetch_moveit_config)/launch/move_group.launch"/>
+
+
+	<param name="planning/group_name" value="arm_with_torso"/>
+	<param name="planning/threshold" value="1.5"/>
+	<param name="planning/planning_time" value="0.1"/>
+	<node pkg="lds" type="move_server.py" name="move_server" output="screen"/>
+</launch>
+
